@@ -1,0 +1,21 @@
+.draggable-gate {
+  padding: 8px;
+  margin: 8px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: grab;
+  text-align: center;
+}
+
+.draggable-gate img {
+  width: 50px;
+  height: 50px;
+  display: block;
+  margin: 0 auto;
+}
+
+.gate-label {
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}

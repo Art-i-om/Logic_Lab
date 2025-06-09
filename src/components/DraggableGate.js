@@ -1,6 +1,7 @@
 // components/DraggableGate.js
 import { useDrag } from 'react-dnd';
 import { ItemTypes } from '../dnd/ItemTypes';
+import './DraggableGate.css';
 
 const DraggableGate = ({ type }) => {
   const [{ isDragging }, drag] = useDrag(() => ({
@@ -11,20 +12,29 @@ const DraggableGate = ({ type }) => {
     }),
   }));
 
+  const getImageSrc = () => {
+    switch (type) {
+      case 'AND':
+        return '/assets/and.png';
+      case 'OR':
+        return '/assets/or-modified.svg';
+      case 'NOT':
+        return '/assets/not.png';
+      default:
+        return null;
+    }
+  };
+
+  const imgSrc = getImageSrc();
+
   return (
     <div
       ref={drag}
-      style={{
-        opacity: isDragging ? 0.5 : 1,
-        padding: '8px',
-        margin: '8px',
-        backgroundColor: '#fff',
-        border: '1px solid #ccc',
-        cursor: 'grab',
-        textAlign: 'center',
-      }}
+      className="draggable-gate"
+      style={{ opacity: isDragging ? 0.5 : 1 }}
     >
-      {type}
+      {imgSrc && <img src={imgSrc} alt={`${type} gate`} />}
+      <div className="gate-label">{type}</div>
     </div>
   );
 };

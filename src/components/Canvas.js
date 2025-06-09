@@ -2,6 +2,7 @@ import { useDrop } from 'react-dnd';
 import { ItemTypes } from '../dnd/ItemTypes';
 import { useState } from 'react';
 import GateOnCanvas from './GateOnCanvas';
+import './Canvas.css';
 
 const Canvas = ({ gates, setGates }) => {
   const moveGate = (id, newX, newY) => {
@@ -43,17 +44,7 @@ const Canvas = ({ gates, setGates }) => {
   }));
 
   return (
-    <div
-      id="canvas"
-      ref={drop}
-      style={{
-        flex: 1,
-        position: 'relative',
-        backgroundImage: 'linear-gradient(#ccc 1px, transparent 1px), linear-gradient(90deg, #ccc 1px, transparent 1px)',
-        backgroundSize: '20px 20px',
-        height: '100vh',
-      }}
-    >
+    <div id="canvas" ref={drop} className="canvas">
       {gates.map((gate) => (
         <GateOnCanvas key={gate.id} {...gate} />
       ))}
