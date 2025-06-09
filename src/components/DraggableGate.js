@@ -1,16 +1,22 @@
 // components/DraggableGate.js
+import { useEffect } from 'react';
 import { useDrag } from 'react-dnd';
+import { getEmptyImage } from 'react-dnd-html5-backend';
 import { ItemTypes } from '../dnd/ItemTypes';
 import './DraggableGate.css';
 
 const DraggableGate = ({ type }) => {
-  const [{ isDragging }, drag] = useDrag(() => ({
+  const [{ isDragging }, drag, preview] = useDrag(() => ({
     type: ItemTypes.GATE,
     item: { type },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
   }));
+
+  useEffect(() => {
+    preview(getEmptyImage(), { captureDraggingState: true });
+  }, [preview]);
 
   const getImageSrc = () => {
     switch (type) {

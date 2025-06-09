@@ -1,6 +1,5 @@
 import { useDrop } from 'react-dnd';
 import { ItemTypes } from '../dnd/ItemTypes';
-import { useState } from 'react';
 import GateOnCanvas from './GateOnCanvas';
 import './Canvas.css';
 

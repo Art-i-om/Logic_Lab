@@ -1,15 +1,20 @@
-import React from 'react';
-import { DndProvider, useDrag } from 'react-dnd';
+import React, { useEffect } from 'react';
+import { useDrag } from 'react-dnd';
+import { getEmptyImage } from 'react-dnd-html5-backend';
 import { ItemTypes } from '../dnd/ItemTypes';
 
 function GateOnCanvas({ id, type, x, y }) {
-  const [{ isDragging }, drag] = useDrag(() => ({
+  const [{ isDragging }, drag, preview] = useDrag(() => ({
     type: ItemTypes.GATE,
     item: { id, type, x, y },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
   }));
+
+  useEffect(() => {
+    preview(getEmptyImage(), { captureDraggingState: true });
+  }, [preview]);
 
   const getImageSrc = () => {
     switch (type) {
