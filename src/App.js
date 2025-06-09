@@ -1,5 +1,6 @@
 import Sidebar from './components/Sidebar';
 import Canvas from './components/Canvas';
+import CustomDragLayer from './components/CustomDragLayer';
 
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -19,6 +20,7 @@ function App() {
         <Sidebar onGateRemove={handleGateRemove} />
         <Canvas gates={gates} setGates={setGates} />
       </div>
+      <CustomDragLayer />
     </DndProvider>
   );
 }
