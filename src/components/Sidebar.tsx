@@ -1,13 +1,14 @@
-// components/Sidebar.js
-import DraggableGate from './DraggableGate';
 import { useDrop } from 'react-dnd';
 import { ItemTypes } from '../dnd/ItemTypes';
 import './Sidebar.css';
+import {SidebarProps} from "../interfaces/SidebarProps";
+import {DroppedItem} from "../interfaces/DroppedItem";
+import GateList from "./GateList";
 
-const Sidebar = ({ onGateRemove }) => {
+const Sidebar = ({ onGateRemove }: SidebarProps) => {
   const [, drop] = useDrop(() => ({
     accept: ItemTypes.GATE,
-    drop: (item) => {
+    drop: (item: DroppedItem) => {
       if (item.id && onGateRemove) {
         onGateRemove(item.id);
       }
@@ -16,10 +17,8 @@ const Sidebar = ({ onGateRemove }) => {
 
   return (
     <div ref={drop} className="sidebar">
-      <h3>Logic Gates</h3>
-      <DraggableGate type="AND" />
-      <DraggableGate type="OR" />
-      <DraggableGate type="NOT" />
+        <h3>Logic Gate</h3>
+        <GateList />
     </div>
   );
 };

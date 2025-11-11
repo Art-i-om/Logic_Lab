@@ -18,7 +18,9 @@ function App() {
     <DndProvider backend={HTML5Backend}>
       <div style={{ display: 'flex' }}>
         <Sidebar onGateRemove={handleGateRemove} />
-        <Canvas gates={gates} setGates={setGates} />
+        <Canvas gates={gates}
+                setGates={setGates}
+        />
       </div>
       <CustomDragLayer />
     </DndProvider>

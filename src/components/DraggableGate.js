@@ -1,4 +1,3 @@
-// components/DraggableGate.js
 import { useEffect } from 'react';
 import { useDrag } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
@@ -23,9 +22,17 @@ const DraggableGate = ({ type }) => {
       case 'AND':
         return '/assets/and.png';
       case 'OR':
-        return '/assets/or-modified.svg';
+        return '/assets/or.png';
       case 'NOT':
         return '/assets/not.png';
+      case 'NAND':
+        return '/assets/nand.png';
+      case 'NOR':
+        return '/assets/nor.png';
+      case 'XOR':
+        return '/assets/xor.png';
+      case 'XNOR':
+        return '/assets/xnor.png';
       default:
         return null;
     }
@@ -37,7 +44,7 @@ const DraggableGate = ({ type }) => {
     <div
       ref={drag}
       className="draggable-gate"
-      style={{ opacity: isDragging ? 0.5 : 1 }}
+      style={{ opacity: isDragging ? 0 : 1 }}
     >
       {imgSrc && <img src={imgSrc} alt={`${type} gate`} />}
       <div className="gate-label">{type}</div>

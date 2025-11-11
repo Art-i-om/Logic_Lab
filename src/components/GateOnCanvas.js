@@ -21,17 +21,17 @@ function GateOnCanvas({ id, type, x, y }) {
       case 'AND':
         return '/assets/and.png';
       case 'OR':
-        return '/assets/or-modified.svg';
+        return '/assets/or.png';
       case 'NOT':
         return '/assets/not.png';
       case 'NAND':
-        return '/assets/nand.svg';
+        return '/assets/nand.png';
       case 'NOR':
-        return '/assets/nor.svg';
+        return '/assets/nor.png';
       case 'XOR':
-        return '/assets/xor.svg';
+        return '/assets/xor.png';
       case 'XNOR':
-        return '/assets/xnor.svg';
+        return '/assets/xnor.png';
       default:
         return null;
     }
@@ -47,7 +47,7 @@ function GateOnCanvas({ id, type, x, y }) {
         left: x,
         top: y,
         cursor: 'move',
-        opacity: isDragging ? 0.5 : 1,
+        opacity: isDragging ? 0 : 1,
       }}
     >
       {imgSrc ? (
