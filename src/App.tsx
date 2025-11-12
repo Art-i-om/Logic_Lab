@@ -1,31 +1,31 @@
-import Sidebar from './components/Sidebar';
-import Canvas from './components/Canvas';
-import CustomDragLayer from './components/CustomDragLayer';
-
+import Sidebar from "./components/Sidebar/Sidebar.tsx";
+import Canvas from "./components/Canvas/Canvas.tsx";
+import CustomDragLayer from "./components/CustomDragLayer.tsx";
+import {useState} from 'react';
+import type {Gate} from "./interfaces/Gate.ts";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-
-import { useState } from 'react';
+// import './App.css';
 
 function App() {
-  const [gates, setGates] = useState([]);
+    const [gates, setGates] = useState<Gate[]>([]);
 
-  const handleGateRemove = (id) => {
-    setGates((prev) => prev.filter((gate) => gate.id !== id));
-  };
+    const handleGateRemove = (id: string | number) => {
+        setGates((prev) =>
+            prev.filter((gate) => gate.id !== id));
+    };
 
-  return (
-    <DndProvider backend={HTML5Backend}>
-      <div style={{ display: 'flex' }}>
-        <Sidebar onGateRemove={handleGateRemove} />
-        <Canvas gates={gates}
-                setGates={setGates}
-        />
-      </div>
-      <CustomDragLayer />
-    </DndProvider>
-  );
-}
-
+    return (
+        <DndProvider backend={HTML5Backend}>
+            <div style={{ display: 'flex' }}>
+                <Sidebar onGateRemove={handleGateRemove} />
+                <Canvas gates={gates}
+                        setGates={setGates}
+                />
+            </div>
+            <CustomDragLayer />
+        </DndProvider>
+    );
+};
 
 export default App;
