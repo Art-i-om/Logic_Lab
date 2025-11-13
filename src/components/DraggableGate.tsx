@@ -1,10 +1,13 @@
 import {ItemTypes} from "../dnd/ItemTypes.ts";
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDrag } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import LogicGateIcon from "../Gates/LogicGateIcon.tsx";
+import type {DraggableGateProps} from "../interfaces/DraggableGateProps.ts";
 
-const DraggableGate = ({ type }) => {
+const DraggableGate = ({ type }: DraggableGateProps) => {
+    const ref = useRef<HTMLDivElement>(null);
+
     const [{ isDragging }, drag, preview] = useDrag(() => ({
         type: ItemTypes.GATE,
         item: { type },
@@ -17,9 +20,13 @@ const DraggableGate = ({ type }) => {
         preview(getEmptyImage(), { captureDraggingState: true });
     }, [preview]);
 
+    useEffect(() => {
+        drag(ref);
+    }, [drag]);
+
     return (
         <div
-            ref={drag}
+            ref={ref}
             className="draggable-gate"
             style={{ opacity: isDragging ? 0 : 1 }}
         >

@@ -1,6 +1,5 @@
 import Sidebar from "./components/Sidebar/Sidebar.tsx";
 import Canvas from "./components/Canvas/Canvas.tsx";
-import CustomDragLayer from "./components/CustomDragLayer.tsx";
 import {useState} from 'react';
 import type {Gate} from "./interfaces/Gate.ts";
 import { DndProvider } from 'react-dnd';
@@ -17,15 +16,12 @@ function App() {
 
     return (
         <DndProvider backend={HTML5Backend}>
-            <div style={{ display: 'flex' }}>
+            <div style={{ display: 'flex', width: '100%', height: '100vh', overflow: 'hidden' }}>
                 <Sidebar onGateRemove={handleGateRemove} />
-                <Canvas gates={gates}
-                        setGates={setGates}
-                />
+                <Canvas gates={gates} setGates={setGates} />
             </div>
-            <CustomDragLayer />
         </DndProvider>
     );
-};
+}
 
 export default App;

@@ -1,62 +1,70 @@
-import { useDrop } from 'react-dnd';
 import { useRef } from 'react';
-import {ItemTypes} from "../../dnd/ItemTypes.ts";
-import type {CanvasProps} from "../../interfaces/CanvasProps.ts";
-import type {Gate} from "../../interfaces/Gate.ts";
-import type {DragItem} from "../../interfaces/DragItem.ts";
-import GateOnCanvas from "../GateOnCanvas/GateOnCanvas.tsx";
-import "./Canvas.css";
+import { useDrop } from 'react-dnd';
+import { ItemTypes } from '../../dnd/ItemTypes';
+import type { DragItem } from '../../interfaces/DragItem';
+import type { CanvasProps } from '../../interfaces/CanvasProps';
+import GateOnCanvas from '../GateOnCanvas/GateOnCanvas';
+import './Canvas.css';
 
-const Canvas: React.FC<CanvasProps> = ({ gates, setGates }) => {
+const Canvas = ({ gates, setGates }: CanvasProps) => {
     const canvasRef = useRef<HTMLDivElement>(null);
-
-    const moveGate = (id: number | string, newX: number, newY: number) => {
-        setGates((prev: Gate[]) =>
-            prev.map((gate: Gate) => (gate.id === id ? {...gate, x: newX, y: newY} : gate))
-        );
-    };
 
     const [, drop] = useDrop(() => ({
         accept: ItemTypes.GATE,
         drop: (item: DragItem, monitor) => {
-            const clientOffset = monitor.getClientOffset();
-            const sourceOffset = monitor.getSourceClientOffset();
-            const canvasRect = canvasRef.current?.getBoundingClientRect();
+            const offset = monitor.getClientOffset();
+            if (!offset || !canvasRef.current) return;
 
-            if (!clientOffset || !sourceOffset || !canvasRect) return;
+            const canvasRect = canvasRef.current.getBoundingClientRect();
+            const x = offset.x - canvasRect.left;
+            const y = offset.y - canvasRect.top;
 
-            const offsetX = clientOffset.x - sourceOffset.x;
-            const offsetY = clientOffset.y - sourceOffset.y;
-
-            const x = clientOffset.x - canvasRect.left - offsetX;
-            const y = clientOffset.y - canvasRect.top - offsetY;
-
-            if (item.id) {
+            if (item.id !== undefined) {
                 moveGate(item.id, x, y);
-            }
-            else {
-                setGates((prev) => [
-                    ...prev,
-                    {
-                        id: Date.now(),
-                        type: item.type,
-                        x,
-                        y,
-                    },
-                ]);
+            } else {
+                addGate(item.type, x, y);
             }
         },
     }));
 
-    drop(canvasRef);
+    const addGate = (type: string, x: number, y: number) => {
+        const newGate = {
+            id: Date.now(),
+            type,
+            x: x - 60,
+            y: y - 30
+        };
+        setGates((prev) => [...prev, newGate]);
+    };
+
+    const moveGate = (id: string | number, newX: number, newY: number) => {
+        setGates((prev) =>
+            prev.map((gate) =>
+                gate.id === id
+                    ? { ...gate, x: newX - 60, y: newY - 30 }
+                    : gate
+            )
+        );
+    };
 
     return (
-        <div id="canvas" ref={canvasRef} className="canvas">
+        <div ref={(node) => {
+            canvasRef.current = node;
+            drop(node);
+        }} className="canvas">
             {gates.map((gate) => (
-                <GateOnCanvas key={gate.id} {...gate} moveGate={moveGate} />
+                <GateOnCanvas
+                    key={gate.id}
+                    id={gate.id}
+                    type={gate.type}
+                    x={gate.x}
+                    y={gate.y}
+                    moveGate={moveGate}
+                />
             ))}
         </div>
-    )
-}
+    );
+};
 
 export default Canvas;
+

@@ -17,6 +17,8 @@ const Sidebar = ({ onGateRemove }: SidebarProps) => {
         },
     }));
 
+    drop(ref);
+
     return (
         <div ref={ref} className="sidebar">
             <h3>Logic Gate</h3>

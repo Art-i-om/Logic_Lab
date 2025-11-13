@@ -1,5 +1,7 @@
 .sidebar {
     width: 200px;
+    min-width: 200px;
+    flex-shrink: 0;
     height: 100vh;
     padding: 1rem;
     background-color: #2b2b2b;
@@ -23,6 +25,7 @@
 
 .draggable-gate {
     user-select: none;
+    cursor: grab;
 }
 
 .draggable-gate:active {
