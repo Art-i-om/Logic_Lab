@@ -6,7 +6,7 @@ import LogicGateIcon from "../../Gates/LogicGateIcon.tsx";
 import type {GateOnCanvasProps} from "../../interfaces/GateOnCanvasProps.ts";
 import "./GateOnCanvas.css";
 
-function GateOnCanvas({ id, type, x, y }: GateOnCanvasProps) {
+function GateOnCanvas({ id, type, x, y, onPortClick }: GateOnCanvasProps) {
     const ref = useRef<HTMLDivElement>(null);
 
     const [{ isDragging }, drag, preview] = useDrag(() => ({
@@ -25,6 +25,56 @@ function GateOnCanvas({ id, type, x, y }: GateOnCanvasProps) {
         drag(ref);
     }, [drag]);
 
+    const handlePortClick = (e: React.MouseEvent, portType: string) => {
+        e.stopPropagation();
+        if (onPortClick) {
+            onPortClick(id, portType);
+        }
+    };
+
+    const renderPorts = () => {
+        if (type === 'START') {
+            // START gate: only output port
+            return (
+                <div
+                    className="port port-output"
+                    style={{ right: '-6px', top: '24px' }}
+                    onClick={(e) => handlePortClick(e, 'output')}
+                />
+            );
+        } else if (type === 'END') {
+            // END gate: only input port
+            return (
+                <div
+                    className="port port-input"
+                    style={{ left: '-6px', top: '24px' }}
+                    onClick={(e) => handlePortClick(e, 'input')}
+                />
+            );
+        } else {
+            // Regular gates: two inputs and one output
+            return (
+                <>
+                    <div
+                        className="port port-input"
+                        style={{ left: '-6px', top: '14px' }}
+                        onClick={(e) => handlePortClick(e, 'input1')}
+                    />
+                    <div
+                        className="port port-input"
+                        style={{ left: '-6px', top: '34px' }}
+                        onClick={(e) => handlePortClick(e, 'input2')}
+                    />
+                    <div
+                        className="port port-output"
+                        style={{ right: '-6px', top: '24px' }}
+                        onClick={(e) => handlePortClick(e, 'output')}
+                    />
+                </>
+            );
+        }
+    };
+
     return (
         <div
             ref={ref}
@@ -36,7 +86,10 @@ function GateOnCanvas({ id, type, x, y }: GateOnCanvasProps) {
             }}
         >
             {type ? (
-                <LogicGateIcon label={type}/>
+                <>
+                    <LogicGateIcon label={type}/>
+                    {renderPorts()}
+                </>
             ) : null}
         </div>
     )

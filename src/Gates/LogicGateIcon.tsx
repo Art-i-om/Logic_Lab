@@ -1,4 +1,42 @@
 export default function LogicGateIcon({ label = "AND" }) {
+    if (label === "START") {
+        return (
+            <svg width="120" height="60" xmlns="http://www.w3.org/2000/svg">
+                <rect x="20" y="10" width="80" height="40" fill="none" stroke="black" strokeWidth="2" />
+                <line x1="100" y1="30" x2="120" y2="30" stroke="black" strokeWidth="2" />
+
+                <text
+                    x="60"
+                    y="35"
+                    fontSize="12"
+                    textAnchor="middle"
+                    fontFamily="sans-serif"
+                >
+                    {label}
+                </text>
+            </svg>
+        );
+    }
+
+    if (label === "END") {
+        return (
+            <svg width="120" height="60" xmlns="http://www.w3.org/2000/svg">
+                <rect x="20" y="10" width="80" height="40" fill="none" stroke="black" strokeWidth="2" />
+                <line x1="0" y1="30" x2="20" y2="30" stroke="black" strokeWidth="2" />
+
+                <text
+                    x="60"
+                    y="35"
+                    fontSize="12"
+                    textAnchor="middle"
+                    fontFamily="sans-serif"
+                >
+                    {label}
+                </text>
+            </svg>
+        );
+    }
+
     return (
         <svg width="120" height="60" xmlns="http://www.w3.org/2000/svg">
             <rect x="20" y="10" width="80" height="40" fill="none" stroke="black" strokeWidth="2" />

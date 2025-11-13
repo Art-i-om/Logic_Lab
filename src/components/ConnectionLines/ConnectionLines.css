@@ -1,0 +1,24 @@
+.connection-lines-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.connection-line {
+    pointer-events: stroke;
+    cursor: pointer;
+}
+
+.connection-line:hover {
+    stroke: #0066cc;
+    stroke-width: 3;
+}
+
+.temp-connection-line {
+    pointer-events: none;
+}
+

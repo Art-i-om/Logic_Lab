@@ -1,7 +1,7 @@
 import DraggableGate from "../components/DraggableGate.tsx";
 
 const GateList = () => {
-    const gateTypes = ['AND', 'OR', 'NOT', 'NAND', 'NOR', 'XOR', 'XNOR'];
+    const gateTypes = ['START', 'END', 'AND', 'OR', 'NOT', 'NAND', 'NOR', 'XOR', 'XNOR'];
 
     return (
         <>
