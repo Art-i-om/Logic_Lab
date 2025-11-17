@@ -6,6 +6,7 @@ import type { CanvasProps } from '../../interfaces/CanvasProps';
 import type { Connection } from '../../interfaces/Connection';
 import GateOnCanvas from '../GateOnCanvas/GateOnCanvas';
 import ConnectionLines from '../ConnectionLines/ConnectionLines';
+import { calculateGateValues } from '../../utils/calculateCircuit';
 import './Canvas.css';
 
 const Canvas = ({ gates, setGates }: CanvasProps) => {
@@ -45,7 +46,9 @@ const Canvas = ({ gates, setGates }: CanvasProps) => {
             id: Date.now(),
             type,
             x: x - 60,
-            y: y - 30
+            y: y - 30,
+            state: type === 'START' ? false : undefined, // Initialize START gates with false
+            value: undefined,
         };
         setGates((prev) => [...prev, newGate]);
     };
@@ -119,6 +122,29 @@ const Canvas = ({ gates, setGates }: CanvasProps) => {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [connectingFrom]);
 
+    // Calculate gate values whenever gates or connections change
+    useEffect(() => {
+        const valueMap = calculateGateValues(gates, connections);
+
+        // Update gates with computed values
+        setGates((prev) =>
+            prev.map((gate) => ({
+                ...gate,
+                value: valueMap.get(gate.id),
+            }))
+        );
+    }, [connections, gates.map(g => g.state).join(',')]); // Recalculate when connections or START states change
+
+    const handleGateStateToggle = (gateId: string | number) => {
+        setGates((prev) =>
+            prev.map((gate) =>
+                gate.id === gateId && gate.type === 'START'
+                    ? { ...gate, state: !gate.state }
+                    : gate
+            )
+        );
+    };
+
     return (
         <div
             ref={(node) => {
@@ -141,8 +167,11 @@ const Canvas = ({ gates, setGates }: CanvasProps) => {
                     type={gate.type}
                     x={gate.x}
                     y={gate.y}
+                    state={gate.state}
+                    value={gate.value}
                     moveGate={moveGate}
                     onPortClick={handlePortClick}
+                    onStateToggle={handleGateStateToggle}
                 />
             ))}
         </div>

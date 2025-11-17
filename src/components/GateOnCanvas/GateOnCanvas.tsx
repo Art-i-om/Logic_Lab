@@ -6,7 +6,7 @@ import LogicGateIcon from "../../Gates/LogicGateIcon.tsx";
 import type {GateOnCanvasProps} from "../../interfaces/GateOnCanvasProps.ts";
 import "./GateOnCanvas.css";
 
-function GateOnCanvas({ id, type, x, y, onPortClick }: GateOnCanvasProps) {
+function GateOnCanvas({ id, type, x, y, state, value, onPortClick, onStateToggle }: GateOnCanvasProps) {
     const ref = useRef<HTMLDivElement>(null);
 
     const [{ isDragging }, drag, preview] = useDrag(() => ({
@@ -30,6 +30,47 @@ function GateOnCanvas({ id, type, x, y, onPortClick }: GateOnCanvasProps) {
         if (onPortClick) {
             onPortClick(id, portType);
         }
+    };
+
+    const handleGateClick = (e: React.MouseEvent) => {
+        // Toggle START gate state on double-click
+        if (type === 'START' && e.detail === 2 && onStateToggle) {
+            e.stopPropagation();
+            onStateToggle(id);
+        }
+    };
+
+    const renderStateIndicator = () => {
+        if (type === 'START') {
+            return (
+                <div
+                    className={`state-indicator ${state ? 'state-true' : 'state-false'}`}
+                    title={`Double-click to toggle. Current: ${state ? 'TRUE' : 'FALSE'}`}
+                >
+                    {state ? '1' : '0'}
+                </div>
+            );
+        } else if (type === 'END') {
+            return (
+                <div
+                    className={`value-display ${value ? 'value-true' : 'value-false'}`}
+                    title={`Output: ${value ? 'TRUE' : 'FALSE'}`}
+                >
+                    {value ? '1' : '0'}
+                </div>
+            );
+        } else if (value !== undefined) {
+            // Show computed value for logic gates
+            return (
+                <div
+                    className={`value-display small ${value ? 'value-true' : 'value-false'}`}
+                    title={`Output: ${value ? 'TRUE' : 'FALSE'}`}
+                >
+                    {value ? '1' : '0'}
+                </div>
+            );
+        }
+        return null;
     };
 
     const renderPorts = () => {
@@ -84,11 +125,13 @@ function GateOnCanvas({ id, type, x, y, onPortClick }: GateOnCanvasProps) {
                 top: y,
                 opacity: isDragging ? 0 : 1,
             }}
+            onClick={handleGateClick}
         >
             {type ? (
                 <>
                     <LogicGateIcon label={type}/>
                     {renderPorts()}
+                    {renderStateIndicator()}
                 </>
             ) : null}
         </div>

@@ -1,4 +1,62 @@
-# React + TypeScript + Vite
+# Logic Lab 🧠⚡
+
+**A Visual Logic Circuit Simulator with Real-Time Evaluation**
+
+Interactive drag-and-drop logic gate builder with instant computation and beautiful visualizations.
+
+## ✨ Features
+
+- 🎨 **Visual Circuit Builder** - Drag & drop gates onto canvas
+- 🔌 **Connection System** - Click ports to create connections with visual feedback
+- 🧮 **Real-Time Logic Evaluation** - Instant computation as you build
+- 🎯 **Interactive START Gates** - Double-click to toggle TRUE/FALSE
+- 📊 **Visual Indicators** - Color-coded states (green=TRUE, red/gray=FALSE)
+- ⚡ **7 Logic Gates** - AND, OR, NOT, NAND, NOR, XOR, XNOR
+- 🎬 **Smooth Animations** - Professional UI/UX with hover effects
+- 📱 **Responsive Design** - Works on various screen sizes
+
+## 🚀 Quick Start
+
+```bash
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+
+# Build for production
+npm run build
+```
+
+## 📖 How to Use
+
+1. **Add Gates**: Drag START, logic gates (AND, OR, etc.), and END from sidebar
+2. **Toggle START**: Double-click START gates to toggle between TRUE (🟢1) and FALSE (🔴0)
+3. **Create Connections**: Click output port (🟠) → click input port (🔵)
+4. **See Results**: END gates display the final computed value
+5. **Move Gates**: Drag gates around - connections follow automatically!
+
+## 🧪 Example Circuit
+
+```
+START (🟢1) ──┐
+              ├──> AND ──> END (🟢1)
+START (🟢1) ──┘
+
+Result: 1 AND 1 = 1
+```
+
+## 🛠️ Tech Stack
+
+- **React** + TypeScript
+- **Vite** - Fast build tool
+- **React DnD** - Drag and drop functionality
+- **SVG** - Connection line rendering
+- **CSS3** - Animations and styling
+
+---
+
+## React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
