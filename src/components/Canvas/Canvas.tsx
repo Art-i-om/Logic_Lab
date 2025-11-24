@@ -47,7 +47,7 @@ const Canvas = ({ gates, setGates }: CanvasProps) => {
             type,
             x: x - 60,
             y: y - 30,
-            state: type === 'START' ? false : undefined, // Initialize START gates with false
+            state: type === 'START' ? false : undefined,
             value: undefined,
         };
         setGates((prev) => [...prev, newGate]);
@@ -65,14 +65,11 @@ const Canvas = ({ gates, setGates }: CanvasProps) => {
 
     const handlePortClick = (gateId: string | number, portType: string) => {
         if (!connectingFrom) {
-            // Start connection from output port
             if (portType === 'output') {
                 setConnectingFrom({ gateId, portType });
             }
         } else {
-            // Complete connection to input port
             if (portType !== 'output') {
-                // Check if connecting from different gate
                 if (connectingFrom.gateId !== gateId) {
                     const newConnection: Connection = {
                         id: Date.now(),
@@ -104,7 +101,6 @@ const Canvas = ({ gates, setGates }: CanvasProps) => {
     };
 
     const handleCanvasClick = () => {
-        // Cancel connection if clicking on canvas
         if (connectingFrom) {
             setConnectingFrom(null);
             setTempConnection(null);
@@ -122,18 +118,16 @@ const Canvas = ({ gates, setGates }: CanvasProps) => {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [connectingFrom]);
 
-    // Calculate gate values whenever gates or connections change
     useEffect(() => {
         const valueMap = calculateGateValues(gates, connections);
 
-        // Update gates with computed values
         setGates((prev) =>
             prev.map((gate) => ({
                 ...gate,
                 value: valueMap.get(gate.id),
             }))
         );
-    }, [connections, gates.map(g => g.state).join(',')]); // Recalculate when connections or START states change
+    }, [connections, gates.map(g => g.state).join(',')]);
 
     const handleGateStateToggle = (gateId: string | number) => {
         setGates((prev) =>

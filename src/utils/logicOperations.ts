@@ -1,7 +1,3 @@
-/**
- * Logic gate operations
- */
-
 export const logicGateOperations = {
     AND: (input1: boolean, input2: boolean): boolean => {
         return input1 && input2;
@@ -11,8 +7,7 @@ export const logicGateOperations = {
         return input1 || input2;
     },
 
-    NOT: (input1: boolean, _input2: boolean): boolean => {
-        // NOT gate uses only first input
+    NOT: (input1: boolean, _: boolean): boolean => {
         return !input1;
     },
 
@@ -34,4 +29,3 @@ export const logicGateOperations = {
 };
 
 export type LogicGateType = keyof typeof logicGateOperations;
-

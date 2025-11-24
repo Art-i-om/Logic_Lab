@@ -1,17 +1,6 @@
-import type { Connection } from '../../interfaces/Connection';
-import type { Gate } from '../../interfaces/Gate';
+import type { ConnectionLinesProps } from "../../interfaces/ConnectionLinesProps.ts";
 import './ConnectionLines.css';
 
-interface ConnectionLinesProps {
-    connections: Connection[];
-    gates: Gate[];
-    tempConnection?: {
-        fromGateId: string | number;
-        fromPort: string;
-        toX: number;
-        toY: number;
-    } | null;
-}
 
 const ConnectionLines = ({ connections, gates, tempConnection }: ConnectionLinesProps) => {
     const getPortPosition = (gateId: string | number, portType: string) => {
@@ -21,7 +10,6 @@ const ConnectionLines = ({ connections, gates, tempConnection }: ConnectionLines
         const gateX = gate.x;
         const gateY = gate.y;
 
-        // Calculate port positions based on gate type and port type
         if (portType === 'output') {
             return { x: gateX + 120, y: gateY + 30 };
         } else if (portType === 'input1') {
@@ -29,7 +17,6 @@ const ConnectionLines = ({ connections, gates, tempConnection }: ConnectionLines
         } else if (portType === 'input2') {
             return { x: gateX, y: gateY + 40 };
         } else if (portType === 'input') {
-            // For END gate - single input in the middle
             return { x: gateX, y: gateY + 30 };
         }
 
@@ -38,7 +25,6 @@ const ConnectionLines = ({ connections, gates, tempConnection }: ConnectionLines
 
     return (
         <svg className="connection-lines-svg">
-            {/* Draw all established connections */}
             {connections.map((conn) => {
                 const from = getPortPosition(conn.fromGateId, conn.fromPort);
                 const to = getPortPosition(conn.toGateId, conn.toPort);
@@ -57,7 +43,6 @@ const ConnectionLines = ({ connections, gates, tempConnection }: ConnectionLines
                 );
             })}
 
-            {/* Draw temporary connection line while connecting */}
             {tempConnection && (() => {
                 const from = getPortPosition(tempConnection.fromGateId, tempConnection.fromPort);
                 return (
