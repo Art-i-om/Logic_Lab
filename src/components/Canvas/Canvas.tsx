@@ -7,6 +7,7 @@ import type { Connection } from '../../interfaces/Connection';
 import GateOnCanvas from '../GateOnCanvas/GateOnCanvas';
 import ConnectionLines from '../ConnectionLines/ConnectionLines';
 import { calculateGateValues } from '../../utils/calculateCircuit';
+import { createGateModel } from '../../utils/gateFactory';
 import './Canvas.css';
 
 const Canvas = ({ gates, setGates }: CanvasProps) => {
@@ -42,13 +43,15 @@ const Canvas = ({ gates, setGates }: CanvasProps) => {
     }));
 
     const addGate = (type: string, x: number, y: number) => {
+        const initialState = type === 'START' ? false : undefined;
         const newGate = {
             id: Date.now(),
             type,
             x: x - 60,
             y: y - 30,
-            state: type === 'START' ? false : undefined,
+            state: initialState,
             value: undefined,
+            logicModel: createGateModel(type, initialState),
         };
         setGates((prev) => [...prev, newGate]);
     };
@@ -127,7 +130,8 @@ const Canvas = ({ gates, setGates }: CanvasProps) => {
                 value: valueMap.get(gate.id),
             }))
         );
-    }, [connections, gates.map(g => g.state).join(',')]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [connections, gates.length, ...gates.map(g => g.state)]);
 
     const handleGateStateToggle = (gateId: string | number) => {
         setGates((prev) =>
