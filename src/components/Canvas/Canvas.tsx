@@ -44,6 +44,8 @@ const Canvas = ({ gates, setGates }: CanvasProps) => {
 
     const addGate = (type: string, x: number, y: number) => {
         const initialState = type === 'START' ? false : undefined;
+        const isMultiInput = type !== 'START' && type !== 'END' && type !== 'NOT';
+        const inputCount = isMultiInput ? 2 : undefined;
         const newGate = {
             id: Date.now(),
             type,
@@ -51,7 +53,8 @@ const Canvas = ({ gates, setGates }: CanvasProps) => {
             y: y - 30,
             state: initialState,
             value: undefined,
-            logicModel: createGateModel(type, initialState),
+            logicModel: createGateModel(type, initialState, inputCount || 2),
+            inputCount: inputCount,
         };
         setGates((prev) => [...prev, newGate]);
     };
@@ -79,7 +82,7 @@ const Canvas = ({ gates, setGates }: CanvasProps) => {
                         fromGateId: connectingFrom.gateId,
                         fromPort: 'output',
                         toGateId: gateId,
-                        toPort: portType as 'input1' | 'input2' | 'input',
+                        toPort: portType,
                     };
                     setConnections((prev) => [...prev, newConnection]);
                 }
@@ -130,7 +133,7 @@ const Canvas = ({ gates, setGates }: CanvasProps) => {
                 value: valueMap.get(gate.id),
             }))
         );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [connections, gates.length, ...gates.map(g => g.state)]);
 
     const handleGateStateToggle = (gateId: string | number) => {
@@ -140,6 +143,38 @@ const Canvas = ({ gates, setGates }: CanvasProps) => {
                     ? { ...gate, state: !gate.state }
                     : gate
             )
+        );
+    };
+
+    const handleInputCountChange = (gateId: string | number, delta: number) => {
+        setGates((prev) =>
+            prev.map((gate) => {
+                if (gate.id === gateId) {
+                    const currentCount = gate.inputCount || 2;
+                    const newCount = Math.max(2, Math.min(8, currentCount + delta));
+
+                    if (newCount !== currentCount) {
+                        // Remove connections to ports that no longer exist
+                        if (newCount < currentCount) {
+                            setConnections((prevConns) =>
+                                prevConns.filter((conn) => {
+                                    if (conn.toGateId === gateId && conn.toPort.startsWith('input')) {
+                                        const portIndex = parseInt(conn.toPort.replace('input', ''));
+                                        return portIndex < newCount;
+                                    }
+                                    return true;
+                                })
+                            );
+                        }
+
+                        // Recreate logic model with new input count
+                        const newLogicModel = createGateModel(gate.type, gate.state, newCount);
+
+                        return { ...gate, inputCount: newCount, logicModel: newLogicModel };
+                    }
+                }
+                return gate;
+            })
         );
     };
 
@@ -167,9 +202,11 @@ const Canvas = ({ gates, setGates }: CanvasProps) => {
                     y={gate.y}
                     state={gate.state}
                     value={gate.value}
+                    inputCount={gate.inputCount}
                     moveGate={moveGate}
                     onPortClick={handlePortClick}
                     onStateToggle={handleGateStateToggle}
+                    onInputCountChange={handleInputCountChange}
                 />
             ))}
         </div>

@@ -10,14 +10,36 @@ const ConnectionLines = ({ connections, gates, tempConnection }: ConnectionLines
         const gateX = gate.x;
         const gateY = gate.y;
 
+        // Handle output port
         if (portType === 'output') {
-            return { x: gateX + 120, y: gateY + 30 };
-        } else if (portType === 'input1') {
-            return { x: gateX, y: gateY + 20 };
-        } else if (portType === 'input2') {
-            return { x: gateX, y: gateY + 40 };
-        } else if (portType === 'input') {
+            if (gate.type === 'NOT') {
+                // NOT gate output at y=30
+                return { x: gateX + 120, y: gateY + 30 };
+            } else if (gate.type === 'START' || gate.type === 'END') {
+                // START/END output at y=30
+                return { x: gateX + 120, y: gateY + 30 };
+            } else {
+                // Multi-input gates - output at center
+                const count = gate.inputCount || 2;
+                const gateHeight = Math.max(60, count * 18 + 20);
+                const rectHeight = gateHeight - 20;
+                return { x: gateX + 120, y: gateY + 10 + rectHeight / 2 };
+            }
+        }
+
+        // Handle input ports
+        if (portType === 'input') {
+            // Single input (NOT, END)
             return { x: gateX, y: gateY + 30 };
+        } else if (portType.startsWith('input')) {
+            // Multi-input gates (input0, input1, input2, etc.)
+            const portIndex = parseInt(portType.replace('input', ''));
+            const count = gate.inputCount || 2;
+            const gateHeight = Math.max(60, count * 18 + 20);
+            const rectHeight = gateHeight - 20;
+            const spacing = rectHeight / (count + 1);
+            const yPos = 10 + spacing * (portIndex + 1);
+            return { x: gateX, y: gateY + yPos };
         }
 
         return { x: gateX, y: gateY };

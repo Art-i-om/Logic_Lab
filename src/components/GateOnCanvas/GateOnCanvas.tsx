@@ -6,7 +6,7 @@ import LogicGateIcon from "../../Gates/LogicGateIcon.tsx";
 import type {GateOnCanvasProps} from "../../interfaces/GateOnCanvasProps.ts";
 import "./GateOnCanvas.css";
 
-function GateOnCanvas({ id, type, x, y, state, value, onPortClick, onStateToggle }: GateOnCanvasProps) {
+function GateOnCanvas({ id, type, x, y, state, value, inputCount = 2, onPortClick, onStateToggle, onInputCountChange }: GateOnCanvasProps) {
     const ref = useRef<HTMLDivElement>(null);
 
     const [{ isDragging }, drag, preview] = useDrag(() => ({
@@ -33,11 +33,21 @@ function GateOnCanvas({ id, type, x, y, state, value, onPortClick, onStateToggle
     };
 
     const handleGateClick = (e: React.MouseEvent) => {
-        // Toggle START gate state on double-click
         if (type === 'START' && e.detail === 2 && onStateToggle) {
             e.stopPropagation();
             onStateToggle(id);
         }
+    };
+
+    const handleInputCountChange = (e: React.MouseEvent, delta: number) => {
+        e.stopPropagation();
+        if (onInputCountChange) {
+            onInputCountChange(id, delta);
+        }
+    };
+
+    const isMultiInputGate = () => {
+        return type !== 'START' && type !== 'END' && type !== 'NOT';
     };
 
     const renderStateIndicator = () => {
@@ -60,7 +70,6 @@ function GateOnCanvas({ id, type, x, y, state, value, onPortClick, onStateToggle
                 </div>
             );
         } else if (value !== undefined) {
-            // Show computed value for logic gates
             return (
                 <div
                     className={`value-display small ${value ? 'value-true' : 'value-false'}`}
@@ -75,7 +84,6 @@ function GateOnCanvas({ id, type, x, y, state, value, onPortClick, onStateToggle
 
     const renderPorts = () => {
         if (type === 'START') {
-            // START gate: only output port
             return (
                 <div
                     className="port port-output"
@@ -84,7 +92,6 @@ function GateOnCanvas({ id, type, x, y, state, value, onPortClick, onStateToggle
                 />
             );
         } else if (type === 'END') {
-            // END gate: only input port
             return (
                 <div
                     className="port port-input"
@@ -92,19 +99,13 @@ function GateOnCanvas({ id, type, x, y, state, value, onPortClick, onStateToggle
                     onClick={(e) => handlePortClick(e, 'input')}
                 />
             );
-        } else {
-            // Regular gates: two inputs and one output
+        } else if (type === 'NOT') {
             return (
                 <>
                     <div
                         className="port port-input"
-                        style={{ left: '-6px', top: '14px' }}
-                        onClick={(e) => handlePortClick(e, 'input1')}
-                    />
-                    <div
-                        className="port port-input"
-                        style={{ left: '-6px', top: '34px' }}
-                        onClick={(e) => handlePortClick(e, 'input2')}
+                        style={{ left: '-6px', top: '24px' }}
+                        onClick={(e) => handlePortClick(e, 'input')}
                     />
                     <div
                         className="port port-output"
@@ -113,7 +114,65 @@ function GateOnCanvas({ id, type, x, y, state, value, onPortClick, onStateToggle
                     />
                 </>
             );
+        } else {
+            // Multi-input gates
+            const count = inputCount || 2;
+            const gateHeight = Math.max(60, count * 18 + 20);
+            const rectHeight = gateHeight - 20;
+            const spacing = rectHeight / (count + 1);
+
+            return (
+                <>
+                    {/* Input ports */}
+                    {Array.from({ length: count }, (_, i) => {
+                        // Calculate Y position to match SVG input lines
+                        const yPos = 10 + spacing * (i + 1);
+                        return (
+                            <div
+                                key={`input${i}`}
+                                className="port port-input"
+                                style={{ left: '-6px', top: `${yPos - 6}px` }}
+                                onClick={(e) => handlePortClick(e, `input${i}`)}
+                            />
+                        );
+                    })}
+                    {/* Output port */}
+                    <div
+                        className="port port-output"
+                        style={{ right: '-6px', top: `${10 + rectHeight / 2 - 6}px` }}
+                        onClick={(e) => handlePortClick(e, 'output')}
+                    />
+                </>
+            );
         }
+    };
+
+    const renderInputControls = () => {
+        if (!isMultiInputGate()) return null;
+
+        const count = inputCount || 2;
+
+        return (
+            <div className="input-controls">
+                <button
+                    className="input-control-btn"
+                    onClick={(e) => handleInputCountChange(e, -1)}
+                    disabled={count <= 2}
+                    title="Decrease inputs"
+                >
+                    −
+                </button>
+                <span className="input-count">{count}</span>
+                <button
+                    className="input-control-btn"
+                    onClick={(e) => handleInputCountChange(e, 1)}
+                    disabled={count >= 8}
+                    title="Increase inputs"
+                >
+                    +
+                </button>
+            </div>
+        );
     };
 
     return (
@@ -129,13 +188,15 @@ function GateOnCanvas({ id, type, x, y, state, value, onPortClick, onStateToggle
         >
             {type ? (
                 <>
-                    <LogicGateIcon label={type}/>
+                    <LogicGateIcon label={type} inputCount={inputCount}/>
                     {renderPorts()}
                     {renderStateIndicator()}
+                    {renderInputControls()}
                 </>
             ) : null}
         </div>
     )
 }
+
 
 export default GateOnCanvas;

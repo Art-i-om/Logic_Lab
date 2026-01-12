@@ -10,9 +10,13 @@ import { StartLogical } from '../models/StartLogical';
 import { EndLogical } from '../models/EndLogical';
 import type { Input } from '../interfaces/Input';
 
-export function createGateModel(type: string, initialState?: boolean): BaseLogical {
+export function createGateModel(type: string, initialState?: boolean, inputCount: number = 2): BaseLogical {
     const emptyInput: Input = {
         getInput: () => false
+    };
+
+    const createInputArray = (count: number): Input[] => {
+        return Array.from({ length: count }, () => ({ ...emptyInput }));
     };
 
     switch (type) {
@@ -21,19 +25,19 @@ export function createGateModel(type: string, initialState?: boolean): BaseLogic
         case 'END':
             return new EndLogical(emptyInput);
         case 'AND':
-            return new AndLogical([emptyInput, emptyInput]);
+            return new AndLogical(createInputArray(inputCount));
         case 'OR':
-            return new OrLogical([emptyInput, emptyInput]);
+            return new OrLogical(createInputArray(inputCount));
         case 'NOT':
             return new NotLogical([emptyInput]);
         case 'NAND':
-            return new NandLogical([emptyInput, emptyInput]);
+            return new NandLogical(createInputArray(inputCount));
         case 'NOR':
-            return new NorLogical([emptyInput, emptyInput]);
+            return new NorLogical(createInputArray(inputCount));
         case 'XOR':
-            return new XorLogical([emptyInput, emptyInput]);
+            return new XorLogical(createInputArray(inputCount));
         case 'XNOR':
-            return new XnorLogical([emptyInput, emptyInput]);
+            return new XnorLogical(createInputArray(inputCount));
         default:
             throw new Error(`Unknown gate type: ${type}`);
     }

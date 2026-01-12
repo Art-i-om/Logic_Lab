@@ -8,4 +8,5 @@ export interface Gate {
     state?: boolean; // For START gates - user can toggle true/false
     value?: boolean; // Computed value for all gates
     logicModel?: BaseLogical; // The logic model instance for this gate
+    inputCount?: number; // Number of input ports (2-8) for multi-input gates
 }
