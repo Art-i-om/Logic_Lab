@@ -20,4 +20,12 @@ export abstract class BaseLogical {
     putInput(index: number, input: Input): void {
         this.inputs[index] = input;
     }
+
+    resetInputs(): void {
+        this.inputs = this.inputs.map(() => new class implements Input {
+            getInput(): boolean {
+                return false;
+            }
+        });
+    }
 }

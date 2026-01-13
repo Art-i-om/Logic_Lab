@@ -10,9 +10,8 @@ import { calculateGateValues } from '../../utils/calculateCircuit';
 import { createGateModel } from '../../utils/gateFactory';
 import './Canvas.css';
 
-const Canvas = ({ gates, setGates }: CanvasProps) => {
+const Canvas = ({ gates, setGates, connections, setConnections }: CanvasProps) => {
     const canvasRef = useRef<HTMLDivElement>(null);
-    const [connections, setConnections] = useState<Connection[]>([]);
     const [connectingFrom, setConnectingFrom] = useState<{
         gateId: string | number;
         portType: string;
@@ -214,4 +213,3 @@ const Canvas = ({ gates, setGates }: CanvasProps) => {
 };
 
 export default Canvas;
-

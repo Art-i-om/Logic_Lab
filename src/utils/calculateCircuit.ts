@@ -44,6 +44,10 @@ export function calculateGateValues(gates: Gate[], connections: Connection[]): M
             gate.logicModel.setValue(gate.state ?? false);
         }
 
+        if (gate.type !== 'START') {
+            gate.logicModel.resetInputs();
+        }
+
         const inputConnections = connections.filter(conn => conn.toGateId === gateId);
 
         if (gate.type !== 'START' && inputConnections.length > 0) {
