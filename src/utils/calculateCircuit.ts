@@ -55,10 +55,8 @@ export function calculateGateValues(gates: Gate[], connections: Connection[]): M
                 const inputWrapper = new GateInputWrapper(conn.fromGateId, getGateValue);
 
                 if (conn.toPort === 'input') {
-                    // Single input gates (NOT, END)
                     gate.logicModel!.putInput(0, inputWrapper);
                 } else if (conn.toPort.startsWith('input')) {
-                    // Multi-input gates - extract index from port name (e.g., "input0", "input1", etc.)
                     const portIndex = parseInt(conn.toPort.replace('input', ''));
                     gate.logicModel!.putInput(portIndex, inputWrapper);
                 }
